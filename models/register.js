@@ -18,8 +18,6 @@ const Signup = mongoose.model('user', {
     usertype: {
         type:String
     }
-    
-
 });
 
 module.exports = Signup;
