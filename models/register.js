@@ -39,8 +39,8 @@ userSchema.methods.generateAuthToken = async function() {
 }
 
 //checking email and password 
-userSchema.statics.checkCrediantialsDb = async(email, password) => {
-    const user1 = await User.findOne({ email: email, password: password })
+userSchema.statics.checkCrediantialsDb = async(mail, pswd) => {
+    const user1 = await User.findOne({ email: mail, password: pswd })
     return user1;
 }
 
