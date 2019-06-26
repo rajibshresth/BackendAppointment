@@ -19,4 +19,12 @@ app.post("/Signup", (req, res) => {
     });
 });
 
+app.post("/login", async function(req, res) {
+    const user = await User.checkCrediantialsDb(req.body.email, req.body.password);
+
+    const token = await user.generateAuthToken();
+    console.log(token)
+    res.json(user)
+})
+
 app.listen(3001);

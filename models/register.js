@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const Signup = mongoose.model('user', {
+const jwt = require('jsonwebtoken');
+const userSchema = new mongoose.Schema({
     fullname: {
         type: String
     },
@@ -17,7 +18,32 @@ const Signup = mongoose.model('user', {
     },
     usertype: {
         type:String
-    }
+    },
+    tokens: [{
+        token: {
+            type: String,
+            required: true
+        }
+    }]
 });
 
-module.exports = Signup;
+//token generating part
+userSchema.methods.generateAuthToken = async function() {
+    const user = this
+    const token = jwt.sign({ _id: user._id.toString() }, 'thisisloginuser')
+
+    console.log(token);
+    user.tokens = user.tokens.concat({ token: token })
+    await user.save()
+    return token;
+}
+
+//checking email and password 
+userSchema.statics.checkCrediantialsDb = async(email, password) => {
+    const user1 = await User.findOne({ email: email, password: password })
+    return user1;
+}
+
+
+const User = mongoose.model('User', userSchema);
+module.exports = User;
