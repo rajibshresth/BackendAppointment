@@ -7,6 +7,7 @@ const cors = require('cors');
 const path = require('path');
 const app = express();
 
+app.use('/profile', express.static('./public/uploads'))
 app.use(cors());
 
 var storage = multer.diskStorage({
@@ -55,25 +56,16 @@ app.post("/login", async function(req, res) {
     res.json(user)
 })
 
-// app.post('/users/logout', auth, async (req, res) => {
-//     try {
-//     req.user.tokens = req.user.tokens.filter((token) => {
-//     return token.token !== req.token
-//     })
-//     await req.user.save()
-//     res.send()
-//     } catch (e) {
-//     res.status(500).send()
-//     }
-//    })
-//    app.post('/users/logoutAll', auth, async (req, res) => {
-//     try {
-//     req.user.tokens = []
-//     await req.user.save()
-//     res.send()
-//     } catch (e) {
-//     res.status(500).send()
-//     }
-//    })
+app.get('/getemployee', function(req,res){
+    User.find().then(function(register){
+        res.send(register);
+    })
+    .catch(function(e){res.send(e)})
+})
+app.delete('/deleteemployee/:id', function(req,res){
+    User.findByIdAndDelete(req.params.id).then(function(){
+    }).catch(function(){
+    })
+    });
 
 app.listen(3001);
