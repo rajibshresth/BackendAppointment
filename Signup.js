@@ -8,6 +8,7 @@ const path = require('path');
 const auth = require('./middleware/auth');
 const app = express();
 const bookappointment = require ('./models/appointment')
+const contact = require ('./models/feedback')
 
 app.use('/profile', express.static('./public/uploads'))
 app.use(cors());
@@ -94,6 +95,27 @@ app.delete('/deleteemployee/:id', function(req,res){
             }).catch(function(){
             })
             });
+
+    app.post('/feedback', function(req,res){
+                var send = new contact(req.body);
+                send.save().then(function(){
+                   res.send('Table Added Successfully');
+                }).catch(function(e){
+                   res.send(e)
+                });
+            })
+    app.get('/showfeedback', function(req,res){
+                contact.find().then(function(feedback){
+                res.send(feedback);
+                   })
+               .catch(function(e){res.send(e)})
+                    })
+            
+    app.delete('/deletefeedback/:id', function(req,res){
+        contact.findByIdAndDelete(req.params.id).then(function(){
+        }).catch(function(){
+        })
+        });
 
 
 
