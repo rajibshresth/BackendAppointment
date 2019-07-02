@@ -5,7 +5,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const path = require('path');
+const auth = require('./middleware/auth');
 const app = express();
+const bookappointment = require ('./models/appointment')
 
 app.use('/profile', express.static('./public/uploads'))
 app.use(cors());
@@ -52,9 +54,12 @@ app.post("/login", async function(req, res) {
     const user = await User.checkCrediantialsDb(req.body.email, req.body.password);
 
     const token = await user.generateAuthToken();
-    console.log(token)
-    res.json(user)
-})
+    console.log(token);
+    res.json(user);
+});
+app.get('/users/me', auth, function(req, res){
+    res.send(req.user);
+});
 
 app.get('/getemployee', function(req,res){
     User.find().then(function(register){
@@ -67,5 +72,29 @@ app.delete('/deleteemployee/:id', function(req,res){
     }).catch(function(){
     })
     });
+
+    app.post("/appointment", function(req,res){
+        var data = new bookappointment(req.body);
+        data.save().then(function(){
+           res.send('Table Added Successfully');
+        }).catch(function(e){
+           res.send(e)
+        });
+    })
+
+   app.get('/showappointment', function(req,res){
+    bookappointment.find().then(function(appointment){
+    res.send(appointment);
+       })
+   .catch(function(e){res.send(e)})
+        })
+
+    app.delete('/delteappointment/:id', function(req,res){
+            bookappointment.findByIdAndDelete(req.params.id).then(function(){
+            }).catch(function(){
+            })
+            });
+
+
 
 app.listen(3001);
