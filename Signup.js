@@ -56,10 +56,18 @@ app.post("/login", async function(req, res) {
 
     const token = await user.generateAuthToken();
     console.log(token);
+    // user['token']=token;
     res.json(user);
 });
 app.get('/users/me', auth, function(req, res){
     res.send(req.user);
+});
+
+app.put('/updateprofile', auth, function(req, res){
+    console.log(req.body);
+    User.findByIdAndUpdate(req.user._id, req.body, {new : true}, (err, user) =>{
+        res.send("Update Successful");
+    });
 });
 
 app.get('/getemployee', function(req,res){
@@ -90,7 +98,7 @@ app.delete('/deleteemployee/:id', function(req,res){
    .catch(function(e){res.send(e)})
         })
 
-    app.delete('/delteappointment/:id', function(req,res){
+    app.delete('/deleteappointment/:id', function(req,res){
             bookappointment.findByIdAndDelete(req.params.id).then(function(){
             }).catch(function(){
             })
