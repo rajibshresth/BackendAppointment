@@ -41,6 +41,7 @@ var upload = multer({
     });
 
 app.use(bodyParser.urlencoded({ extended: false }));
+
 app.post("/Signup", (req, res) => {
     var myData = new User(req.body);
     myData.save().then(function() {
@@ -124,6 +125,33 @@ app.delete('/deleteemployee/:id', function(req,res){
         }).catch(function(){
         })
         });
+
+
+    app.get('/getUserById/id', function(req, res){
+        const uid = req.params.id.toString();
+        console.log(uid);
+        User.findById(uid).
+        then(function(user){
+            res.json(user);
+            console.log(user);
+        })
+        .catch(function(e){
+            res.send(e);
+        })
+    });
+
+    app.put('/UserUpdateAndroid', function(req, res){
+        console.log(req.body);
+        var uid = req.body._id;
+        User.findByIdAndUpdate({_id: uid}, req.body).then(function(){
+            console.log("User Profile");
+            res.send()
+            console.log(req.body)
+        }).catch(function(e){
+            console.log("Error")
+        })
+
+    })
 
 
 
